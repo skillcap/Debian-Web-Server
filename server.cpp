@@ -70,7 +70,11 @@ int main(int argv, char** argc){
     return 0;
 }
 
-//     Connection_handler:
+/*
+    Name: connection_handler
+    Function: Accepts a socket and manages a connection following HTTP.
+    *Thread Safe* 
+*/
 void connection_handler(int socket){
 //  1) Read a single HTTP request from the data socket.
     char buff[1024];
@@ -81,9 +85,7 @@ void connection_handler(int socket){
         
     //  2) Parse the HTTP request line to discover necessary information
     //     needed to retrieve the appropriate document
-    //     /* You will need the resource path, and the HTTP version.
-    //        Note that we are only supporting GET requests for this
-    //        assignment */
+    //     //get resource path, http version. Only supporting GET requests here.
     //      If http 1.1 keep_alive = true!
         fgets(buff, 1024, fp);
         //std::cout << buff << std::endl;
@@ -130,16 +132,13 @@ void connection_handler(int socket){
         //          file sizes.)
                 response = "HTTP/1.0 200 OK\r\nContent-Length: " + std::to_string(file_size);
                 response.append("\n\r\n");
-                //std::cout << response << std::endl;
                 //send headers
-                //fwrite(response.c_str(), strlen(response.c_str()), 1, fp);
                  send(socket, response.c_str(), strlen(response.c_str()), 0);
                 //fetch file
                 char buf[4096] = {0};
                 file.read(buf, 4096);
                 int count = file.gcount();
                 while (count > 0) {
-                    //std::cout << buf << std::endl;
                     send(socket, buf, 4096, 0);
                     file.read(buf, 4096);
                     count = file.gcount();
@@ -171,6 +170,10 @@ void connection_handler(int socket){
     return;
 }
 
+/*
+    Name: chomp
+    Function: Accepts a string, removes the first portion up to the first space or endline and returns it.
+*/
 std::string chomp(std::string& food){
     std::string bite = "";
     if(food.find(' ') < food.find('\n'))
@@ -181,6 +184,10 @@ std::string chomp(std::string& food){
     return bite;
 }
 
+/*
+    Name: get_file_size
+    Function: Takes a file and returns its size in bytes.
+*/
 int get_file_size(std::ifstream &file){
     int beg = file.tellg();
     file.seekg(0, std::ios::end);
@@ -189,7 +196,10 @@ int get_file_size(std::ifstream &file){
     return length;
 }
 
-//process request and run lua script in order to generate/send dynamic content
+/*
+    Name: run_lua_script
+    Function: takes a socket and a request in order to generate/send dynamic content.
+*/
 int run_lua_script(int socket, std::string request){
     //parse request
     std::string response = "";
