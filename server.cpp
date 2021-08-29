@@ -152,7 +152,7 @@ void connection_handler(int socket){
                             "<title>404 Not Found</title>"
                             "</head><body>"
                             "<h1>Not Found</h1>"
-                            "<p>The requested URL was not found on this server.</p>";;
+                            "<p>The requested URL was not found on this server.</p>";
                 
                 send(socket, response.c_str(), strlen(response.c_str()), 0);
             }
@@ -223,7 +223,7 @@ int run_lua_script(int socket, std::string request){
                             "<title>404 Not Found</title>"
                             "</head><body>"
                             "<h1>Not Found</h1>"
-                            "<p>The requested URL was not found on this server.</p>";;
+                            "<p>The requested URL was not found on this server.</p>";
                 
         send(socket, response.c_str(), strlen(response.c_str()), 0);
         return 1;
